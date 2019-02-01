@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<!-- Basic style components -->
+<link rel="stylesheet" href="./dist/jui-grid.classic.css" />
+
+<!-- Grid style components -->
+<link rel="stylesheet" href="./dist/grid.min.css" />
+<link rel="stylesheet" href="./dist/grid-jennifer.min.css" />
+
+<script src="./dist/jquery-2.2.4.min.js"></script>
+<script src="./dist/jui-core.js"></script>
+<script src="./dist/jui-grid.js"></script>
+
+<!-- <script src="./dist/jui-ui.js"></script> -->
+
+</head>
+
+<body class="jui">
+<input type="file" id="table_16_btn" />
+
+<table id="table_16" class="table simple headline" style="margin-top: 7px;">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script id="tpl_row" type="text/template">
+    <tr>
+        <td><!= name !></td>
+        <td><!= age !></td>
+    </tr>
+</script>
+
+<script id="tpl_none" type="text/template">
+    <tr>
+        <td colspan="2" class="none" align="center">Data does not exist.</td>
+    </tr>
+</script>
+</body>
+<script>
+jui.ready([ "grid.table" ], function(table) {
+    table_16 = table("#table_16", {
+        fields: [ "name", "age" ],
+        resize: true,
+        sort: true,
+        tpl: {
+            row: $("#tpl_row").html(),
+            none: $("#tpl_none").html()
+        }
+    });
+
+    $("#table_16_btn").change(function (e) {
+        table_16.setCsvFile(e.target.files[0]);
+    });
+});
+</script>
+</html>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>지원 유형별(SUB) 현항</title>
+<title>사이트별 지원 현항</title>
  
 <link rel="stylesheet" href="./dist/jui-grid.classic.css" />
 <script src="./dist/jquery-2.2.4.min.js"></script>
@@ -16,7 +16,7 @@
 </head>
 <script>
 $(document).ready(function(){
-	pie_chart();
+	bar_result();
 });
 
 jui.ready([ "grid.xtable" ], function(xtable) {
@@ -110,7 +110,7 @@ jui.ready([ "grid.xtable" ], function(xtable) {
     <div class="loading"></div>
 </script>
 <div style="wdith:500px; height:500px;">
-	<div id="pie_result" style="width:50%; height:100%; "></div>
+	<div id="result" style="width:50%; height:100%; "></div>
 </div>
 
  
@@ -118,51 +118,63 @@ jui.ready([ "grid.xtable" ], function(xtable) {
 <script>
 
 
-function pie_chart(){
-var chart = jui.include("chart.builder");
-var names = {
-    ie: "IE",
-    ff: "Fire Fox",
-    chrome: "Chrome",
-    safari: "Safari",
-    other: "Others"
-};
+function bar_result(){
+	var chart = jui.include("chart.builder");
+	var activeIndex = 0,
+	    data = [
+	        { quarter : "1월", samsung : 50 },
+	        { quarter : "2월", samsung : 20},
+	        { quarter : "3월", samsung : 20 },
+	        { quarter : "4월", samsung : 30},
+	        { quarter : "5월", samsung : 10},
+	        { quarter : "6월", samsung : 30},
+	        { quarter : "7월", samsung : 20},
+	        { quarter : "8월", samsung : 30},
+	        { quarter : "9월", samsung : 60},
+	        { quarter : "10월", samsung : 30},
+	        { quarter : "11월", samsung : 80},
+	        { quarter : "12월", samsung : 30},
+	        { quarter : "13월", samsung : 30},
+	        { quarter : "14월", samsung : 10},
+	        
+	    ];
 
-chart("#pie_result", {
-    padding : 150,
-    axis : {
-        data : [
-            { ie : 70, ff : 11, chrome : 9, safari : 6, other : 4 }
-        ]
-    },
-    brush : {
-        type : "pie",
-        showText : "outer",
-        active : "ie",
-        activeEvent : "click",
-        format : function(k, v) {
-            return names[k] + ": " + v;
-        }
-    },
-    widget : [{
-        type : "title",
-        text : "Pie Sample"
-    }, {
-        type : "tooltip",
-        orient : "left",
-        format : function(data, k) {
-            return {
-                key: names[k],
-                value: data[k]
-            }
-        }
-    }, {
-        type : "legend",
-        format : function(k) {
-            return names[k];
-        }
-    }]
-});
+	chart("#result", {
+	    axis : {
+	        x : {
+	            type : "block",
+	            domain : "quarter",
+	            line : true
+	        },
+	        y : {
+	            type : "range",
+	            domain : function(data) {
+	                return data.samsung;
+	            },
+	            line : true,
+	            orient : "right"
+	        },
+	        data : data
+	    },
+	    brush : {
+	        type : "stackcolumn",
+	        active : activeIndex,
+	        activeEvent : "click",
+	        target : [ "samsung" ]
+	    },
+	    widget : [
+	        { type : "title", text : "Column Sample" },
+	        { type : "legend", filter : true }
+	    ],
+	    event : {
+	        "mousedown" : function(d) {
+	            activeIndex = d.dataIndex;
+	        },
+	        "legend.filter" : function(target) {
+	            this.updateBrush(0, { active: activeIndex });
+	        }
+	    }
+	});
 }
 </script>
 
